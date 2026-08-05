@@ -768,4 +768,25 @@ public final class AnimationManager {
         int[] pattern = new int[Constants.getSupportedAnimationPatternLengths()[0]];
         updateLedFrame(pattern);
     }
+
+    /**
+     * Temporarily lights up all glyphs at the given raw brightness level, bypassing
+     * any pattern/frame scaling. Used to give a live preview while the user drags the
+     * brightness slider in Settings. Does not touch Constants.brightness, so it has no
+     * effect on the persisted/actual brightness used by other animations.
+     */
+    public static void previewBrightness(int brightness) {
+        // Glyph is already in use , so skip preview
+        if (StatusManager.isGlyphIdle()) {
+            return;
+        }
+        FileUtils.writeAllLed(brightness);
+    }
+
+    /**
+     * Ends a brightness preview started by previewBrightness() 
+     */
+    public static void stopBrightnessPreview() {
+        FileUtils.writeAllLed(0);
+    }
 }
